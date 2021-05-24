@@ -26,6 +26,10 @@ android {
         protoc {
             artifact = 'com.google.protobuf:protoc:3.8.0'
         }
+        plugins {
+            grpc { artifact = 'io.grpc:protoc-gen-grpc-java:1.38.0' // CURRENT_GRPC_VERSION
+            }
+        }
         generateProtoTasks {
             all().each { task ->
                 task.builtins {
@@ -33,8 +37,17 @@ android {
                         option "lite"
                     }
                 }
+                task.plugins {
+                    grpc { // Options added to --grpc_out
+                        option 'lite' }
+                }
             }
         }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
@@ -48,4 +61,11 @@ dependencies {
 
     // You need to depend on the lite runtime library, not protobuf-java
     implementation 'com.google.protobuf:protobuf-javalite:3.8.0'
+
+    implementation 'io.grpc:grpc-okhttp:1.38.0' // CURRENT_GRPC_VERSION
+    implementation 'io.grpc:grpc-protobuf-lite:1.38.0' // CURRENT_GRPC_VERSION
+    implementation 'io.grpc:grpc-stub:1.38.0' // CURRENT_GRPC_VERSION
+
+    // error: cannot find symbol @javax.annotation.Generated
+    implementation 'javax.annotation:javax.annotation-api:1.3.2'
 }
